@@ -15,9 +15,8 @@
 #' @param df_col_chr character vector of parameter names which should be names of character columns in `df`. Default is `NULL`.
 #' @param df_col_fac character vector of parameter names which should be names of factor columns in `df`. Default is `NULL`.
 #' @param df data.frame with column names provided in `df_col_*`. Default is `NULL`.
-#' @param return_filt_vars logical vector of length 1 indicating if the names of df filter variables should be returned. Filter variables are defined as parameter names in `param_list` not provided in `req_*`, `opt_*`, `df_col_*`, or `deps`. Default is `TRUE`.
 #'
-#' @return character vector of the names of df filter variables if `return_filt_vars` is `TRUE`; otherwise `NULL`, invisibly.
+#' @return named list containing i) the names of reserved parameters included in `param_list` and ii) the names of df filter variables.
 #' @export
 #'
 #' @examples
@@ -41,8 +40,7 @@
 #'                  req_lgl = "protein_coding_only",
 #'                  req_num = c("min_cnt_excl", "min_freq_incl", "padj"),
 #'                  req_chr = c("input_count", "model_formula"),
-#'                  df = metadata,
-#'                  return_filt_vars = TRUE)
+#'                  df = metadata)
 #'
 check_param_list <- function(param_list,
                              req_lgl = NULL,
@@ -58,9 +56,7 @@ check_param_list <- function(param_list,
                              df_col_num = NULL,
                              df_col_chr = NULL,
                              df_col_fac = NULL,
-                             df = NULL,
-                             return_filt_vars = TRUE
-) {
+                             df = NULL) {
 
   # Check that param_list is a named list
   is_named_list <- function(x) {
@@ -372,11 +368,8 @@ check_param_list <- function(param_list,
 
   }
 
-  # Return filter vars if requested
-  if(return_filt_vars) {
-
-    filt_vars
-
-  }
+  # Return reserved parameter names included in param_list and filter vars
+  list(incl_res = incl_res,
+       filt_vars = filt_vars)
 
 }

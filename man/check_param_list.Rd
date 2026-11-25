@@ -19,8 +19,7 @@ check_param_list(
   df_col_num = NULL,
   df_col_chr = NULL,
   df_col_fac = NULL,
-  df = NULL,
-  return_filt_vars = TRUE
+  df = NULL
 )
 }
 \arguments{
@@ -53,11 +52,9 @@ check_param_list(
 \item{df_col_fac}{character vector of parameter names which should be names of factor columns in \code{df}. Default is \code{NULL}.}
 
 \item{df}{data.frame with column names provided in \verb{df_col_*}. Default is \code{NULL}.}
-
-\item{return_filt_vars}{logical vector of length 1 indicating if the names of df filter variables should be returned. Filter variables are defined as parameter names in \code{param_list} not provided in \verb{req_*}, \verb{opt_*}, \verb{df_col_*}, or \code{deps}. Default is \code{TRUE}.}
 }
 \value{
-character vector of the names of df filter variables if \code{return_filt_vars} is \code{TRUE}; otherwise \code{NULL}, invisibly.
+named list containing i) the names of reserved parameters included in \code{param_list} and ii) the names of df filter variables.
 }
 \description{
 Check parameter list validity
@@ -83,7 +80,6 @@ check_param_list(param_list,
                  req_lgl = "protein_coding_only",
                  req_num = c("min_cnt_excl", "min_freq_incl", "padj"),
                  req_chr = c("input_count", "model_formula"),
-                 df = metadata,
-                 return_filt_vars = TRUE)
+                 df = metadata)
 
 }
