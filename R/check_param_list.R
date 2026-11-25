@@ -15,6 +15,7 @@
 #' @param df_col_chr character vector of parameter names which should be names of character columns in `df`. Default is `NULL`.
 #' @param df_col_fac character vector of parameter names which should be names of factor columns in `df`. Default is `NULL`.
 #' @param df data.frame with column names provided in `df_col_*`. Default is `NULL`.
+#' @param verbose `TRUE` or `FALSE` (default).
 #'
 #' @return named list containing i) the names of reserved parameters included in `param_list` and ii) the names of df filter variables.
 #' @export
@@ -56,7 +57,19 @@ check_param_list <- function(param_list,
                              df_col_num = NULL,
                              df_col_chr = NULL,
                              df_col_fac = NULL,
-                             df = NULL) {
+                             df = NULL,
+                             verbose = FALSE) {
+
+  # Check that verbose is a single TRUE or FALSE
+  if(!is.logical(verbose) || length(verbose) != 1L || is.na(verbose)) {
+
+    stop("verbose must be a single TRUE or FALSE",
+         call. = FALSE)
+
+  }
+
+  # Print messages only if verbose is TRUE
+  inform <- function(...) if(verbose) message(...)
 
   # Check that param_list is a named list
   is_named_list <- function(x) {
@@ -105,7 +118,7 @@ check_param_list <- function(param_list,
 
   } else {
 
-    message("All param_list entries are unique!")
+    inform("All param_list entries are unique!")
 
   }
 
@@ -164,7 +177,7 @@ check_param_list <- function(param_list,
 
   } else {
 
-    message("All required entries are present in param_list!")
+    inform("All required entries are present in param_list!")
 
   }
 
@@ -200,7 +213,7 @@ check_param_list <- function(param_list,
 
   check_type(x = c(incl_req_fac, incl_opt_fac, incl_df_col_fac), type = "factor")
 
-  message("All req / opt / df_col param_list entries are of the expected type!")
+  inform("All req / opt / df_col param_list entries are of the expected type!")
 
   # Check dependencies for reserved param_list entries
   if(!is.null(deps)) {
@@ -260,7 +273,7 @@ check_param_list <- function(param_list,
 
         } else {
 
-          message("All deps values for entry ", i, " are present in param_list!")
+          inform("All deps values for entry ", i, " are present in param_list!")
 
         }
 
@@ -315,7 +328,7 @@ check_param_list <- function(param_list,
 
     check_type_in_df(x = incl_df_col_fac, type = "factor")
 
-    message("All df_col param_list entries are names of columns of the expected type in df!")
+    inform("All df_col param_list entries are names of columns of the expected type in df!")
 
   } else {
 
@@ -363,8 +376,8 @@ check_param_list <- function(param_list,
 
   if(length(filt_vars) > 0L) {
 
-    message("The following param_list entries are expected to be filter variables in df: ",
-            paste0(filt_vars, collapse = ", "))
+    inform("The following param_list entries are expected to be filter variables in df: ",
+           paste0(filt_vars, collapse = ", "))
 
   }
 
