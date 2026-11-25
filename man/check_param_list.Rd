@@ -19,6 +19,7 @@ check_param_list(
   df_col_num = NULL,
   df_col_chr = NULL,
   df_col_fac = NULL,
+  df_col_list = NULL,
   df = NULL,
   verbose = FALSE
 )
@@ -52,9 +53,11 @@ check_param_list(
 
 \item{df_col_fac}{character vector of parameter names which should be names of factor columns in \code{df}. Default is \code{NULL}.}
 
+\item{df_col_list}{character vector of parameter names which should be names of list columns in \code{df}. The parameter values themselves are not type-checked unless also declared in \verb{req_*} or \verb{opt_*}. Default is \code{NULL}.}
+
 \item{df}{data.frame with column names provided in \verb{df_col_*}. Default is \code{NULL}.}
 
-\item{verbose}{\code{TRUE} or \code{FALSE} (default).}
+\item{verbose}{\code{TRUE} or \code{FALSE} (default). Should progress messages be printed?}
 }
 \value{
 named list containing i) the names of reserved parameters included in \code{param_list} and ii) the names of df filter variables.

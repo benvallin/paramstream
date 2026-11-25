@@ -14,8 +14,9 @@
 #' @param df_col_num character vector of parameter names which should be names of numeric columns in `df`. Default is `NULL`.
 #' @param df_col_chr character vector of parameter names which should be names of character columns in `df`. Default is `NULL`.
 #' @param df_col_fac character vector of parameter names which should be names of factor columns in `df`. Default is `NULL`.
+#' @param df_col_list character vector of parameter names which should be names of list columns in `df`. The parameter values themselves are not type-checked unless also declared in `req_*` or `opt_*`. Default is `NULL`.
 #' @param df data.frame with column names provided in `df_col_*`. Default is `NULL`.
-#' @param verbose `TRUE` or `FALSE` (default).
+#' @param verbose `TRUE` or `FALSE` (default). Should progress messages be printed?
 #'
 #' @return named list containing i) the names of reserved parameters included in `param_list` and ii) the names of df filter variables.
 #' @export
@@ -57,6 +58,7 @@ check_param_list <- function(param_list,
                              df_col_num = NULL,
                              df_col_chr = NULL,
                              df_col_fac = NULL,
+                             df_col_list = NULL,
                              df = NULL,
                              verbose = FALSE) {
 
@@ -90,7 +92,7 @@ check_param_list <- function(param_list,
   # Check that req_* / opt_* / df_col_* arguments are character vectors or NULL
   chr_args <- c("req_lgl", "req_num", "req_chr", "req_fac",
                 "opt_lgl", "opt_num", "opt_chr", "opt_fac",
-                "df_col_lgl", "df_col_num", "df_col_chr", "df_col_fac")
+                "df_col_lgl", "df_col_num", "df_col_chr", "df_col_fac", "df_col_list")
 
   invalid <- vapply(X = mget(chr_args),
                     FUN = function(x) !(is.character(x) || is.null(x)),
@@ -128,7 +130,7 @@ check_param_list <- function(param_list,
   # Define reserved param_list entries
   res <- unique(c(req_lgl, req_num, req_chr, req_fac,
                   opt_lgl, opt_num, opt_chr, opt_fac,
-                  df_col_lgl, df_col_num, df_col_chr, df_col_fac,
+                  df_col_lgl, df_col_num, df_col_chr, df_col_fac, df_col_list,
                   names(deps), unlist(deps, use.names = FALSE)))
 
   # Check that no entry is declared with more than one type
@@ -164,6 +166,7 @@ check_param_list <- function(param_list,
   incl_df_col_num <- incl(df_col_num)
   incl_df_col_chr <- incl(df_col_chr)
   incl_df_col_fac <- incl(df_col_fac)
+  incl_df_col_list <- incl(df_col_list)
   incl_res <- incl(res)
 
   # Check presence of mandatory entries in param_list
@@ -303,7 +306,8 @@ check_param_list <- function(param_list,
                     logical = "is.logical",
                     numeric = "is.numeric",
                     character = "is.character",
-                    factor = "is.factor")
+                    factor = "is.factor",
+                    list = "is.list")
 
       fun <- match.fun(fun)
 
@@ -328,12 +332,14 @@ check_param_list <- function(param_list,
 
     check_type_in_df(x = incl_df_col_fac, type = "factor")
 
+    check_type_in_df(x = incl_df_col_list, type = "list")
+
     inform("All df_col param_list entries are names of columns of the expected type in df!")
 
   } else {
 
     # Stop if df_col_* values were passed without a df
-    incl_df_col <- c(incl_df_col_lgl, incl_df_col_num, incl_df_col_chr, incl_df_col_fac)
+    incl_df_col <- c(incl_df_col_lgl, incl_df_col_num, incl_df_col_chr, incl_df_col_fac, incl_df_col_list)
 
     if(length(incl_df_col) > 0L) {
 
